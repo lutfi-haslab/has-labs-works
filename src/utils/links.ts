@@ -1,0 +1,1 @@
+export const anyTalkLink = ["Home", "Chat", "Dashboard"];

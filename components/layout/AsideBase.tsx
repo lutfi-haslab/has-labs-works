@@ -10,13 +10,14 @@ import { FaBeer } from "react-icons/fa";
 import clsx from "clsx";
 import { useAtom } from "jotai";
 import { sideActiveLink } from "../context/store";
+import Link from "next/link";
 
 type Props = {
   children: React.ReactNode;
   listLink: Array<string>;
   title: string;
-  initialLink: string
-}
+  initialLink: string | undefined;
+};
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -136,25 +137,27 @@ const AsideBase = ({ children, listLink, title, initialLink }: Props) => {
   const [, setSideActiveLink] = useAtom(sideActiveLink);
 
   const links = listLink.map((link, i) => (
-    <a
+    <Link
       className={cx(classes.link, {
         [classes.linkActive]: activeLink === link,
       })}
-      href="/"
+      href={`/${title.toLowerCase()}/${
+        link.toLowerCase() == "home" ? "" : link.toLowerCase()
+      }`}
       onClick={(event) => {
-        event.preventDefault();
+        // event.preventDefault();
         setActiveLink(link);
         setSideActiveLink([String(i), link]);
       }}
       key={link}
     >
       {link}
-    </a>
+    </Link>
   ));
 
   return (
     <div className="flex">
-      <Navbar height={750} width={{ sm: 250 }} className="h-screen">
+      <Navbar height={750} width={{ sm: 150 }} className="h-screen hidden lg:flex">
         <Navbar.Section grow className={classes.wrapper}>
           <div className={clsx(classes.main, "hidden lg:block")}>
             <Title order={2} className={classes.title}>
@@ -164,8 +167,11 @@ const AsideBase = ({ children, listLink, title, initialLink }: Props) => {
             {links}
           </div>
         </Navbar.Section>
+        <Link href="/" className="p-4 bg-gray-50 text-lg font-bold bg-[#228BE6] text-white hover:(scale-100 text-2xl duration-400)">
+          Back Home
+        </Link>
       </Navbar>
-      <div className="h-screen w-full overflow-auto">{children}</div>
+      <div className="p-10 h-screen w-full overflow-auto">{children}</div>
     </div>
   );
 };
